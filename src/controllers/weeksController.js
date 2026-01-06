@@ -1,0 +1,87 @@
+import StateBaby from '../models/babyState.js';
+import StateMom from '../models/momState.js';
+import { calcPregnancyInfo } from '../utils/pregnancyCalc.js';
+
+//  * PUBLIC
+//  * GET /api/weeks
+//  ? повертає дані для головної сторінки неавторизованого користувача-1й тиждень/
+
+export const getPublicWeekInfo = async (req, res) => {
+  const { week = 1 } = req.query;
+
+  const baby = await StateBaby.findOne({ weekNumber: Number(week) });
+
+  if (!baby) {
+    return res.status(404).json({ message: 'Week data not found' });
+  }
+
+  res.json({
+    weekNumber: baby.weekNumber,
+    baby: {
+      analogy: baby.analogy,
+      size: baby.babySize,
+      weight: baby.babyWeight,
+      activity: baby.babyActivity,
+      image: baby.image,
+    },
+    momTip: baby.momDailyTips?.[0] || null,
+  });
+};
+
+//  * PRIVATE
+//  * GET /api/weeks/current
+// ? повертає дані(тиждень) для головної сторінки авторизованого користувача відповідно дати пологів
+
+export const getPrivateWeekInfo = async (req, res) => {
+  const { pregnancyStartDate, dueDate } = req.user;
+
+  const { currentWeek, daysToBirth } = calcPregnancyInfo({
+    startDate: pregnancyStartDate,
+    dueDate,
+  });
+
+  const baby = await StateBaby.findOne({ weekNumber: currentWeek });
+
+  res.json({
+    weekNumber: currentWeek,
+    daysToBirth,
+    baby,
+  });
+};
+
+//  * PRIVATE
+//  * GET /api/weeks/baby
+//  ? поветає дані про малюка відповідно до тижня
+export const getBabyDevelopment = async (req, res) => {
+  const { pregnancyStartDate } = req.user;
+
+  const { currentWeek } = calcPregnancyInfo({
+    startDate: pregnancyStartDate,
+  });
+
+  const baby = await StateBaby.findOne({ weekNumber: currentWeek });
+
+  res.json({
+    weekNumber: currentWeek,
+    development: baby?.babyDevelopment,
+    interestingFact: baby?.interestingFact,
+  });
+};
+
+//  * PRIVATE
+//  * GET /api/weeks/mom
+// ? поветає дані про мaму відповідно до тижня
+export const getMomState = async (req, res) => {
+  const { pregnancyStartDate } = req.user;
+
+  const { currentWeek } = calcPregnancyInfo({
+    startDate: pregnancyStartDate,
+  });
+
+  const mom = await StateMom.findOne({ weekNumber: currentWeek });
+
+  res.json({
+    weekNumber: currentWeek,
+    mom,
+  });
+};
