@@ -2,10 +2,6 @@ import StateBaby from '../models/babyState.js';
 import StateMom from '../models/momState.js';
 import { calcPregnancyInfo } from '../utils/pregnancyCalc.js';
 
-//  * PUBLIC
-//  * GET /api/weeks
-//  ? повертає дані для головної сторінки неавторизованого користувача-1й тиждень/
-
 export const getPublicWeekInfo = async (req, res) => {
   const { week = 1 } = req.query;
 
@@ -28,10 +24,6 @@ export const getPublicWeekInfo = async (req, res) => {
   });
 };
 
-//  * PRIVATE
-//  * GET /api/weeks/current
-// ? повертає дані(тиждень) для головної сторінки авторизованого користувача відповідно дати пологів
-
 export const getPrivateWeekInfo = async (req, res) => {
   const { pregnancyStartDate, dueDate } = req.user;
 
@@ -49,9 +41,6 @@ export const getPrivateWeekInfo = async (req, res) => {
   });
 };
 
-//  * PRIVATE
-//  * GET /api/weeks/baby
-//  ? поветає дані про малюка відповідно до тижня
 export const getBabyDevelopment = async (req, res) => {
   const { pregnancyStartDate } = req.user;
   const { week } = req.query;
@@ -80,9 +69,6 @@ export const getBabyDevelopment = async (req, res) => {
   });
 };
 
-//  * PRIVATE
-//  * GET /api/weeks/mom
-// ? поветає дані про мaму відповідно до тижня
 export const getMomState = async (req, res) => {
   const { pregnancyStartDate } = req.user;
   const { week } = req.query;
