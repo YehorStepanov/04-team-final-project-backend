@@ -8,6 +8,7 @@ import {
 import { authenticate } from '../middlewares/authenticate.js';
 import ctrlWrapper from '../helper/ctrlWrapper.js';
 import { BABY_SEX } from '../constants/babySex.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = Router();
 
@@ -20,11 +21,7 @@ router.get(
 router.patch(
   '/api/users/avatar',
   authenticate,
-  celebrate({
-    body: Joi.object({
-      avatar: Joi.string().uri().required(),
-    }),
-  }),
+  upload.single('avatar'),
   ctrlWrapper(updateAvatarController),
 );
 

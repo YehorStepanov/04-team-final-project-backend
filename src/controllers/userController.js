@@ -1,5 +1,6 @@
 import { User } from '../models/user.js';
 import createHttpError from 'http-errors';
+import { uploadToCloudinary } from '../helper/cloudinary.js';
 
 export const getCurrentUserController = async (req, res) => {
   const user = req.user;
@@ -12,15 +13,15 @@ export const getCurrentUserController = async (req, res) => {
 };
 
 export const updateAvatarController = async (req, res) => {
-  const { avatar } = req.body;
-
-  if (!avatar) {
-    throw createHttpError(400, 'Avatar URL is required');
+  if (!req.file) {
+    throw createHttpError(400, 'Avatar file is required');
   }
+
+  const uploadResult = await uploadToCloudinary(req.file);
 
   const updatedUser = await User.findByIdAndUpdate(
     req.user._id,
-    { avatar },
+    { avatar: uploadResult.secure_url },
     { new: true },
   );
 
