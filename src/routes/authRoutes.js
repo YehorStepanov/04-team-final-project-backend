@@ -11,16 +11,25 @@ import {
   registerUserController,
 } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import ctrlWrapper from '../helper/ctrlWrapper.js';
 
 const router = Router();
 
 router.post(
   '/api/auth/register',
   celebrate(registerUserSchema),
-  registerUserController,
+  ctrlWrapper(registerUserController),
 );
-router.post('/api/auth/login', celebrate(loginUserSchema), loginUserController);
-router.post('/api/auth/logout', authenticate, logoutUserController);
-router.post('/api/auth/refresh', refreshSessionController);
+router.post(
+  '/api/auth/login',
+  celebrate(loginUserSchema),
+  ctrlWrapper(loginUserController),
+);
+router.post(
+  '/api/auth/logout',
+  authenticate,
+  ctrlWrapper(logoutUserController),
+);
+router.post('/api/auth/refresh', ctrlWrapper(refreshSessionController));
 
 export default router;
