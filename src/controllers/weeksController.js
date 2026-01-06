@@ -54,17 +54,29 @@ export const getPrivateWeekInfo = async (req, res) => {
 //  ? поветає дані про малюка відповідно до тижня
 export const getBabyDevelopment = async (req, res) => {
   const { pregnancyStartDate } = req.user;
+  const { week } = req.query;
 
-  const { currentWeek } = calcPregnancyInfo({
-    startDate: pregnancyStartDate,
-  });
+  let weekNumber;
 
-  const baby = await StateBaby.findOne({ weekNumber: currentWeek });
+  if (week) {
+    weekNumber = Number(week);
+  } else {
+    const { currentWeek } = calcPregnancyInfo({
+      startDate: pregnancyStartDate,
+    });
+    weekNumber = currentWeek;
+  }
+
+  const baby = await StateBaby.findOne({ weekNumber });
+
+  if (!baby) {
+    return res.status(404).json({ message: 'Week data not found' });
+  }
 
   res.json({
-    weekNumber: currentWeek,
-    development: baby?.babyDevelopment,
-    interestingFact: baby?.interestingFact,
+    weekNumber,
+    development: baby.babyDevelopment,
+    interestingFact: baby.interestingFact,
   });
 };
 
@@ -73,15 +85,27 @@ export const getBabyDevelopment = async (req, res) => {
 // ? поветає дані про мaму відповідно до тижня
 export const getMomState = async (req, res) => {
   const { pregnancyStartDate } = req.user;
+  const { week } = req.query;
 
-  const { currentWeek } = calcPregnancyInfo({
-    startDate: pregnancyStartDate,
-  });
+  let weekNumber;
 
-  const mom = await StateMom.findOne({ weekNumber: currentWeek });
+  if (week) {
+    weekNumber = Number(week);
+  } else {
+    const { currentWeek } = calcPregnancyInfo({
+      startDate: pregnancyStartDate,
+    });
+    weekNumber = currentWeek;
+  }
+
+  const mom = await StateMom.findOne({ weekNumber });
+
+  if (!mom) {
+    return res.status(404).json({ message: 'Week data not found' });
+  }
 
   res.json({
-    weekNumber: currentWeek,
+    weekNumber,
     mom,
   });
 };

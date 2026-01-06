@@ -7,6 +7,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -24,6 +25,7 @@ app.use(cookieParser());
 
 //! приклад як та куди додавати маршрути: app.use(authRoutes);
 app.use('/api/weeks', weeksRoutes);
+app.use(authRoutes);
 
 app.use(notFoundHandler);
 app.use(errors());
