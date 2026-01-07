@@ -7,6 +7,7 @@ const userSchema = new Schema(
       type: String,
       trim: true,
       required: true,
+      maxlength: 32,
     },
     email: {
       type: String,
@@ -27,7 +28,7 @@ const userSchema = new Schema(
       enum: [...BABY_SEX],
       default: BABY_SEX_DEFAULT,
     },
-    tema: {
+    theme: {
       type: String,
       enum: [...BABY_SEX],
       default: BABY_SEX_DEFAULT,
