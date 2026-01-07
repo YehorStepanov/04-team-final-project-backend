@@ -22,12 +22,12 @@ export const getPublicWeekInfo = async (req, res) => {
     daysToBirth,
     baby: {
       analogy: baby.analogy,
-      size: baby.babySize,
-      weight: baby.babyWeight,
-      activity: baby.babyActivity,
+      babySize: baby.babySize,
+      babyWeight: baby.babyWeight,
+      babyActivity: baby.babyActivity,
       image: baby.image,
     },
-    momTip: baby.momDailyTips?.[0] || null,
+    momDailyTips: baby.momDailyTips?.[0] || null,
   });
 };
 
@@ -73,7 +73,7 @@ export const getBabyDevelopment = async (req, res) => {
 
   res.status(200).json({
     weekNumber,
-    development: baby.babyDevelopment,
+    babyDevelopment: baby.babyDevelopment,
     interestingFact: baby.interestingFact,
   });
 };
