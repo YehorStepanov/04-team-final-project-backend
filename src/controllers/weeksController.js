@@ -1,7 +1,7 @@
 import StateBaby from '../models/babyState.js';
 import StateMom from '../models/momState.js';
 import { calcPregnancyInfo } from '../utils/pregnancyCalc.js';
-import { ONE_WEEK } from '../constants/time.js';
+import { TOTAL_DAYS, DAYS_IN_WEEK } from '../constants/time.js';
 
 export const getPublicWeekInfo = async (req, res) => {
   const weekNumber = Number(req.query.week ?? 1);
@@ -12,9 +12,7 @@ export const getPublicWeekInfo = async (req, res) => {
     return res.status(404).json({ message: 'Week data not found' });
   }
 
-  const TOTAL_DAYS = 280;
-
-  const daysPassed = (weekNumber - 1) * ONE_WEEK;
+  const daysPassed = (weekNumber - 1) * DAYS_IN_WEEK;
   const daysToBirth = Math.max(0, TOTAL_DAYS - daysPassed);
 
   res.status(200).json({
@@ -32,18 +30,9 @@ export const getPublicWeekInfo = async (req, res) => {
 };
 
 export const getPrivateWeekInfo = async (req, res) => {
-  const { pregnancyStartDate, dueDate } = req.user;
+  const { dueDate } = req.user;
 
-  if (!pregnancyStartDate) {
-    return res.status(400).json({
-      message: 'pregnancyStartDate is missing in user profile',
-    });
-  }
-
-  const { currentWeek, daysToBirth } = calcPregnancyInfo({
-    startDate: pregnancyStartDate,
-    dueDate,
-  });
+  const { currentWeek, daysToBirth } = calcPregnancyInfo({ dueDate });
 
   const baby = await StateBaby.findOne({ weekNumber: currentWeek });
 
@@ -54,15 +43,22 @@ export const getPrivateWeekInfo = async (req, res) => {
   res.status(200).json({
     weekNumber: currentWeek,
     daysToBirth,
-    baby,
+    baby: {
+      analogy: baby.analogy,
+      babySize: baby.babySize,
+      babyWeight: baby.babyWeight,
+      babyActivity: baby.babyActivity,
+      image: baby.image,
+    },
+    momDailyTips: baby.momDailyTips?.[0] || null,
   });
 };
 
 export const getBabyDevelopment = async (req, res) => {
   const weekNumber = Number(req.query.week);
 
-  if (!weekNumber) {
-    return res.status(400).json({ message: 'Week number is required' });
+  if (!Number.isInteger(weekNumber) || weekNumber < 1) {
+    return res.status(400).json({ message: 'Invalid week number' });
   }
 
   const baby = await StateBaby.findOne({ weekNumber });
@@ -83,8 +79,8 @@ export const getMomState = async (req, res) => {
 
   const weekNumber = Number(week);
 
-  if (!weekNumber) {
-    return res.status(400).json({ message: 'Week number is required' });
+  if (!Number.isInteger(weekNumber) || weekNumber < 1) {
+    return res.status(400).json({ message: 'Invalid week number' });
   }
 
   const mom = await StateMom.findOne({ weekNumber });

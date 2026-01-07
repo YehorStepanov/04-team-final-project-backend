@@ -1,22 +1,17 @@
-import { ONE_DAY, ONE_WEEK, FORTY_WEEKS } from '../constants/time.js';
+import { TOTAL_DAYS, ONE_DAY } from '../constants/time.js';
 
-export const calcPregnancyInfo = ({ startDate, dueDate }) => {
+export const calcPregnancyInfo = ({ dueDate }) => {
   const now = new Date();
-  const start = new Date(startDate);
+  const due = new Date(dueDate);
 
-  const diffDays = Math.floor((now - start) / ONE_DAY);
-  const currentWeek = Math.max(1, Math.ceil(diffDays / ONE_WEEK));
+  const daysToBirth = Math.max(0, Math.ceil((due - now) / ONE_DAY));
 
-  let daysToBirth;
+  const daysPassed = TOTAL_DAYS - daysToBirth;
 
-  if (dueDate) {
-    daysToBirth = Math.max(0, Math.ceil((new Date(dueDate) - now) / ONE_DAY));
-  } else {
-    daysToBirth = Math.max(
-      0,
-      Math.ceil((FORTY_WEEKS - (now - start)) / ONE_DAY),
-    );
-  }
+  const currentWeek = Math.min(40, Math.max(1, Math.ceil(daysPassed / 7)));
 
-  return { currentWeek, daysToBirth };
+  return {
+    currentWeek,
+    daysToBirth,
+  };
 };
