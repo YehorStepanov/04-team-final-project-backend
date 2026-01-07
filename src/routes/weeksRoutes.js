@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../middlewares/authenticate.js';
+import ctrlWrapper from '../helper/ctrlWrapper.js';
 
 import {
   getPublicWeekInfo,
@@ -10,10 +11,10 @@ import {
 
 const router = Router();
 
-router.get('/', getPublicWeekInfo);
+router.get('/api/weeks/', ctrlWrapper(getPublicWeekInfo));
 
-router.get('/current', authenticate, getPrivateWeekInfo);
-router.get('/baby', authenticate, getBabyDevelopment);
-router.get('/mom', authenticate, getMomState);
+router.get('/api/weeks/current', authenticate, ctrlWrapper(getPrivateWeekInfo));
+router.get('/api/weeks/baby', authenticate, ctrlWrapper(getBabyDevelopment));
+router.get('/api/weeks/mom', authenticate, ctrlWrapper(getMomState));
 
 export default router;

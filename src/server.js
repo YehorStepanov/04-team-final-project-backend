@@ -25,7 +25,7 @@ app.use(
 app.use(cookieParser());
 
 //! приклад як та куди додавати маршрути: app.use(authRoutes);
-app.use('/api/weeks', weeksRoutes);
+app.use(weeksRoutes);
 app.use(authRoutes);
 app.use(userRoutes);
 
