@@ -26,3 +26,17 @@ export const DUE_DATE_MESSAGES = {
 export const LOGIN_OBJECT_MESSAGES = {
   'object.unknown': 'Only email and password are allowed',
 };
+
+export const UPDATE_NAME_MESSAGES = {
+  'string.min': 'Name must be at least 2 character',
+  'string.max': 'Name must be at most 32 characters',
+  'string.empty': 'Name cannot be empty',
+};
+
+export const GENDER_MESSAGES = {
+  'any.only': 'Gender must be one of: male, female, neutral',
+};
+
+export const THEME_MESSAGES = {
+  'any.only': 'Theme must be one of: male, female, neutral',
+};

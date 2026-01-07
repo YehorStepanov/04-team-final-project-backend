@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { celebrate, Joi } from 'celebrate';
+import { celebrate } from 'celebrate';
 import {
   getCurrentUserController,
   updateAvatarController,
@@ -7,8 +7,8 @@ import {
 } from '../controllers/userController.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import ctrlWrapper from '../helper/ctrlWrapper.js';
-import { BABY_SEX } from '../constants/babySex.js';
 import { upload } from '../middlewares/upload.js';
+import { updateUserSchema } from '../validations/userValidation.js';
 
 const router = Router();
 
@@ -28,14 +28,7 @@ router.patch(
 router.patch(
   '/api/users/update',
   authenticate,
-  celebrate({
-    body: Joi.object({
-      name: Joi.string().trim().min(1).max(32),
-      gender: Joi.string().valid(...BABY_SEX),
-      theme: Joi.string().valid(...BABY_SEX),
-      dueDate: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/),
-    }),
-  }),
+  celebrate(updateUserSchema),
   ctrlWrapper(updateUserController),
 );
 
