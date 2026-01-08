@@ -2,6 +2,7 @@ import express from 'express';
 import { logger } from './middlewares/logger.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import weeksRoutes from './routes/weeksRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errors } from 'celebrate';
@@ -25,6 +26,7 @@ app.use(
 app.use(cookieParser());
 
 //! приклад як та куди додавати маршрути: app.use(authRoutes);
+app.use(weeksRoutes);
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(taskRouter);
