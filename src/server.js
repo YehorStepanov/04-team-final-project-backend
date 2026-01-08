@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import weeksRoutes from './routes/weeksRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-import { errors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';

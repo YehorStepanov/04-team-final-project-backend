@@ -6,9 +6,12 @@ import { TOTAL_DAYS, DAYS_IN_WEEK } from '../constants/time.js';
 export const getPublicWeekInfo = async (req, res) => {
   const weekNumber = Number(req.query.week ?? 1);
 
-  const baby = await StateBaby.findOne({ weekNumber });
+  const [baby, mom] = await Promise.all([
+    StateBaby.findOne({ weekNumber }),
+    StateMom.findOne({ weekNumber }),
+  ]);
 
-  if (!baby) {
+  if (!baby || !mom) {
     return res.status(404).json({ message: 'Week data not found' });
   }
 
@@ -23,9 +26,14 @@ export const getPublicWeekInfo = async (req, res) => {
       babySize: baby.babySize,
       babyWeight: baby.babyWeight,
       babyActivity: baby.babyActivity,
+      development: baby.babyDevelopment,
+      interestingFact: baby.interestingFact,
       image: baby.image,
     },
-    momDailyTips: baby.momDailyTips?.[0] || null,
+    mom: {
+      feelings: mom.feelings,
+      comfortTips: mom.comfortTips,
+    },
   });
 };
 
@@ -34,9 +42,12 @@ export const getPrivateWeekInfo = async (req, res) => {
 
   const { currentWeek, daysToBirth } = calcPregnancyInfo({ dueDate });
 
-  const baby = await StateBaby.findOne({ weekNumber: currentWeek });
+  const [baby, mom] = await Promise.all([
+    StateBaby.findOne({ weekNumber: currentWeek }),
+    StateMom.findOne({ weekNumber: currentWeek }),
+  ]);
 
-  if (!baby) {
+  if (!baby || !mom) {
     return res.status(404).json({ message: 'Week data not found' });
   }
 
@@ -48,9 +59,14 @@ export const getPrivateWeekInfo = async (req, res) => {
       babySize: baby.babySize,
       babyWeight: baby.babyWeight,
       babyActivity: baby.babyActivity,
+      development: baby.babyDevelopment,
+      interestingFact: baby.interestingFact,
       image: baby.image,
     },
-    momDailyTips: baby.momDailyTips?.[0] || null,
+    mom: {
+      feelings: mom.feelings,
+      comfortTips: mom.comfortTips,
+    },
   });
 };
 
