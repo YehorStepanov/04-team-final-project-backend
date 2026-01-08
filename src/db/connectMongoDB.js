@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 export const connectMongoDB = async () => {
+  if (!process.env.MONGO_URL) {
+    throw new Error('Set MONGO_URL environment variable');
+  }
+
   try {
     const mongoUrl = process.env.MONGO_URL;
 

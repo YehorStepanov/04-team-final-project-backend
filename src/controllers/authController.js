@@ -9,6 +9,8 @@ import { Session } from '../models/session.js';
 import { clearSession, setSessionCookies } from '../helper/authHelpers.js';
 
 export const registerUserController = async (req, res) => {
+  console.log('1. Контролер реєстрації викликано!'); // <--- ДОДАЙ ЦЕ
+  console.log('2. Тіло запиту:', req.body); // <--- ДОДАЙ ЦЕ
   const user = await registerUser(req.body);
 
   const newSession = await createSession(user._id);
