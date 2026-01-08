@@ -3,3 +3,6 @@ export const ONE_DAY = 24 * 60 * 60 * 1000;
 
 export const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 export const FORTY_WEEKS = 40 * 7 * 24 * 60 * 60 * 1000;
+
+export const TOTAL_DAYS = 280;
+export const DAYS_IN_WEEK = 7;

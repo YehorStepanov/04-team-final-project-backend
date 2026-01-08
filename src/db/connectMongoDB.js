@@ -3,6 +3,10 @@ import { Diary } from '../models/diary.js';
 import { DiaryCategory } from '../models/diaryCategory.js';
 
 export const connectMongoDB = async () => {
+  if (!process.env.MONGO_URL) {
+    throw new Error('Set MONGO_URL environment variable');
+  }
+
   try {
     const mongoUrl = process.env.MONGO_URL;
     await mongoose.connect(mongoUrl);
