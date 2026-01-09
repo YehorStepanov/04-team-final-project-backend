@@ -8,16 +8,18 @@ import {
   NAME_MESSAGES,
   PASSWORD_MESSAGES,
 } from '../constants/validationMessages.js';
+import { DATE_REGEX } from '../constants/regex.js';
+import { addMs, formatDateOnly, normalizeDate } from '../utils/date.js';
 
 export const validateDueDate = (value, helpers) => {
-  const date = new Date(`${value}T00:00:00.000Z`);
+  const date = normalizeDate(value);
   if (Number.isNaN(date.getTime())) {
     return helpers.error('any.invalid');
   }
 
-  const now = new Date();
-  const minDate = new Date(now.getTime() + ONE_WEEK);
-  const maxDate = new Date(now.getTime() + FORTY_WEEKS);
+  const today = normalizeDate(new Date());
+  const minDate = addMs(today, ONE_WEEK);
+  const maxDate = addMs(today, FORTY_WEEKS);
 
   if (date < minDate) {
     return helpers.error('date.min');
@@ -30,9 +32,7 @@ export const validateDueDate = (value, helpers) => {
 };
 
 const getDefaultDueDate = () =>
-  new Date(Date.now() + ONE_WEEK).toISOString().slice(0, 10);
-
-const YYYY_MM_DD_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+  formatDateOnly(addMs(normalizeDate(new Date()), ONE_WEEK));
 
 export const registerUserSchema = {
   [Segments.BODY]: Joi.object({
@@ -52,13 +52,13 @@ export const registerUserSchema = {
     gender: Joi.string()
       .valid(...BABY_SEX)
       .default(BABY_SEX_DEFAULT),
-    tema: Joi.string()
+    theme: Joi.string()
       .valid(...BABY_SEX)
       .default(BABY_SEX_DEFAULT),
     dueDate: Joi.string()
-      .pattern(YYYY_MM_DD_REGEX)
+      .pattern(DATE_REGEX)
       .custom(validateDueDate)
-      .default(() => getDefaultDueDate())
+      .default(getDefaultDueDate)
       .messages(DUE_DATE_MESSAGES),
   }),
 };

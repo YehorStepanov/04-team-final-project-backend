@@ -1,6 +1,11 @@
 import { Joi, Segments } from 'celebrate';
+import { isValidObjectId } from 'mongoose';
 
 import { DATE_REGEX } from '../constants/regex.js';
+
+const objectIdValidator = (value, helpers) => {
+  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
+};
 
 export const createTaskSchema = {
   [Segments.BODY]: Joi.object({
@@ -12,7 +17,7 @@ export const createTaskSchema = {
 
 export const stateTaskSchema = {
   [Segments.PARAMS]: Joi.object({
-    id: Joi.string().hex().length(24).required(),
+    id: Joi.string().custom(objectIdValidator).required(),
   }),
 
   [Segments.BODY]: Joi.object({

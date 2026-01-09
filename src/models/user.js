@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { BABY_SEX, BABY_SEX_DEFAULT } from '../constants/babySex.js';
+import { DATE_REGEX } from '../constants/regex.js';
 
 const userSchema = new Schema(
   {
@@ -7,7 +8,7 @@ const userSchema = new Schema(
       type: String,
       trim: true,
       required: true,
-      maxlength: 32,
+      maxLength: 32,
     },
     email: {
       type: String,
@@ -15,13 +16,13 @@ const userSchema = new Schema(
       lowercase: true,
       unique: true,
       required: true,
-      maxlength: 64,
+      maxLength: 64,
     },
     password: {
       type: String,
       required: true,
       minlength: 8,
-      maxlength: 128,
+      maxLength: 128,
     },
     gender: {
       type: String,
@@ -35,7 +36,7 @@ const userSchema = new Schema(
     },
     dueDate: {
       type: String,
-      match: /^\d{4}-\d{2}-\d{2}$/,
+      match: DATE_REGEX,
     },
     avatar: {
       type: String,

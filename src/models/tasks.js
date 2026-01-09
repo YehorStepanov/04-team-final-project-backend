@@ -22,4 +22,6 @@ const taskSchema = new Schema(
   { versionKey: false, timestamps: true },
 );
 
+taskSchema.index({ userId: 1, date: 1 });
+
 export const Task = model('Task', taskSchema);
