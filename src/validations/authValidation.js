@@ -1,5 +1,5 @@
 import { Joi, Segments } from 'celebrate';
-import { FORTY_WEEKS, ONE_WEEK } from '../constants/time.js';
+import { DAYS_IN_WEEK, TOTAL_DAYS } from '../constants/time.js';
 import { BABY_SEX, BABY_SEX_DEFAULT } from '../constants/babySex.js';
 import {
   DUE_DATE_MESSAGES,
@@ -9,7 +9,7 @@ import {
   PASSWORD_MESSAGES,
 } from '../constants/validationMessages.js';
 import { DATE_REGEX } from '../constants/regex.js';
-import { addMs, formatDateOnly, normalizeDate } from '../utils/date.js';
+import { addDays, formatDateOnly, normalizeDate } from '../utils/date.js';
 
 export const validateDueDate = (value, helpers) => {
   const date = normalizeDate(value);
@@ -18,8 +18,8 @@ export const validateDueDate = (value, helpers) => {
   }
 
   const today = normalizeDate(new Date());
-  const minDate = addMs(today, ONE_WEEK);
-  const maxDate = addMs(today, FORTY_WEEKS);
+  const minDate = addDays(today, DAYS_IN_WEEK);
+  const maxDate = addDays(today, TOTAL_DAYS);
 
   if (date < minDate) {
     return helpers.error('date.min');
@@ -31,8 +31,11 @@ export const validateDueDate = (value, helpers) => {
   return value;
 };
 
-const getDefaultDueDate = () =>
-  formatDateOnly(addMs(normalizeDate(new Date()), ONE_WEEK));
+export const getDefaultDueDate = () => {
+  const today = new Date();
+  const oneWeekLater = addDays(today, 7);
+  return formatDateOnly(oneWeekLater);
+};
 
 export const registerUserSchema = {
   [Segments.BODY]: Joi.object({
