@@ -60,5 +60,6 @@ export const deleteDiaryEntry = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Diary entry deleted successfully!',
+    data: deletedEntry,
   });
 };
