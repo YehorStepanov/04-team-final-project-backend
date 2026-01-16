@@ -16,6 +16,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import taskRouter from './routes/tasksRoutes.js';
 import diaryRouter from './routes/diaryRoutes.js';
+import emotionRoutes from './routes/emotionRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -37,6 +38,7 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(taskRouter);
 app.use(diaryRouter);
+app.use(emotionRoutes);
 
 app.use(notFoundHandler);
 app.use(errors());
